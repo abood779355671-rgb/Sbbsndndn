@@ -1,0 +1,22 @@
+services:
+  bot:
+    build: .
+    restart: always
+    env_file: .env
+    depends_on: [mongo, redis]
+    volumes: ["./logs:/app/logs"]
+    networks: [internal]
+  mongo:
+    image: mongo:7
+    restart: always
+    volumes: ["mongo_data:/data/db"]
+    networks: [internal]      # #18: لا ports مكشوفة
+  redis:
+    image: redis:7-alpine
+    restart: always
+    networks: [internal]
+networks:
+  internal:
+    driver: bridge
+volumes:
+  mongo_data:
